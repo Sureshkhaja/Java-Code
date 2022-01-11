@@ -1,37 +1,51 @@
-This sample application shows an example of a deadlock. Following is the definition of "deadlock" according to Java Tutorial
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    # Copyright 2018 M. Isuru Tharanga Chrishantha Perera
+    #
+    # Licensed under the Apache License, Version 2.0 (the "License");
+    # you may not use this file except in compliance with the License.
+    # You may obtain a copy of the License at
+    #
+    # http://www.apache.org/licenses/LICENSE-2.0
+    #
+    # Unless required by applicable law or agreed to in writing, software
+    # distributed under the License is distributed on an "AS IS" BASIS,
+    # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    # See the License for the specific language governing permissions and
+    # limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-Deadlock describes a situation where two or more threads are blocked forever, waiting for each other.
+    <parent>
+        <groupId>com.github.chrishantha.sample</groupId>
+        <artifactId>java-samples</artifactId>
+        <version>0.0.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-In this application, there are two threads trying to acquire two locks.
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>threadleak</artifactId>
+    <packaging>jar</packaging>
+    <name>threadleak</name>
 
-How to run
-The application will throw Out of Memory error after some time when you run the application with default parameters.
+    <dependencies>
+        <dependency>
+            <groupId>com.github.chrishantha.sample</groupId>
+            <artifactId>base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hdrhistogram</groupId>
+            <artifactId>HdrHistogram</artifactId>
+        </dependency>
+    </dependencies>
 
-java -Xms1g -Xmx1g -jar target/deadlock.jar
-
-How to detect a deadlock
-Take a thread dump (using jstack <pid> command or jcmd <pid> Thread.print).
-
-The thread dump should show the Java level deadlock details as follows.
-
-Found one Java-level deadlock:
-=============================
-"Thread Group  1-2":
-  waiting to lock monitor 0x00007f8ab4003a78 (object 0x00000000eaca1488, a java.lang.Object),
-  which is held by "Thread Group  1-1"
-"Thread Group  1-1":
-  waiting to lock monitor 0x00007f8ab4006518 (object 0x00000000eaca1498, a java.lang.Object),
-  which is held by "Thread Group  1-2"
-
-Java stack information for the threads listed above:
-===================================================
-"Thread Group  1-2":
-        at com.github.chrishantha.sample.deadlock.DeadlockApplication$SampleLockThread.run(DeadlockApplication.java:54)
-        - waiting to lock <0x00000000eaca1488> (a java.lang.Object)
-        - locked <0x00000000eaca1498> (a java.lang.Object)
-"Thread Group  1-1":
-        at com.github.chrishantha.sample.deadlock.DeadlockApplication$SampleLockThread.run(DeadlockApplication.java:54)
-        - waiting to lock <0x00000000eaca1498> (a java.lang.Object)
-        - locked <0x00000000eaca1488> (a java.lang.Object)
-
-Found 1 deadlock.
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
